@@ -1,0 +1,14 @@
+# Build de MkDocs
+site/
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# SO / editor
+Thumbs.db
+.DS_Store
+.vscode/
