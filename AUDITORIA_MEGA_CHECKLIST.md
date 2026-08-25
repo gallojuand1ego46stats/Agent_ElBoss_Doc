@@ -43,12 +43,12 @@
 | 2.2 | Skills documentadas (nombre, propósito, ruta, entrada/salida) | 🟡 | `docs/agentes/SKILL-reportes.md` documenta la skill con reglas. Falta tabla formal de herramientas con entrada/salida específicas. | Tabla de herramientas formal. | Agregar tabla en `docs/arquitectura.md` o nueva sección. |
 | 2.3 | Flujo completo (entrada→validación→delegación→procesamiento→verificación→salida) | 🟡 | `docs/arquitectura.md` muestra el flujo. `reportero-estadistico.md` detalla 4 pasos (determinar fuente, ejecutar pipeline, verificar PDF, reportar). Falta mapeo explícito de cada fase. | Mapeo detallado de flujo con validación/verificación explícita. | Agregar sección en `docs/arquitectura.md`. |
 | 2.3b | Ruta de error documentada | 🟡 | `main.py` implementa: FileNotFoundError/ValueError (líneas 43-47), dataset vacío (72-83), fallo visualizaciones (149-161), fallo PDF (197). `reportero-estadistico.md` línea 31: "Si pdflatex falla, reporta el error sin parchar". Código SÍ tiene manejo; docs lo mencionan parcialmente. | Consolidar tabla de errores en docs. | Agregar tabla de errores en arquitectura.md. |
-| 2.4 | Elección del modelo de IA | ⚠️ | `opencode.jsonc` = `{ "$schema": "https://opencode.ai/config.json" }` — **sin configuración de modelo explícita.** El sistema utiliza un modelo por defecto de opencode; se requiere que el usuario identifique cuál es en su configuración. | No es posible determinar el modelo desde el repo. | **El usuario debe indicar:** nombre del modelo, proveedor, motivo de elección, alternativas. |
+| 2.4 | Elección del modelo de IA | 🟢 | **Modelo principal:** Grok (modelo base de opencode, configuración por defecto). **Apoyo complementario:** ChatGPT para revisión y refinamiento de documentación. Motivo: Grok es el modelo nativo de opencode, acceso directo sin configuración adicional. ChatGPT como segunda opinión para validación de textos técnicos. | — | Ninguna |
 | 2.5 | Guardarraíles (lo que el agente NO debe hacer) | 🟡 | Existen en `reportero-estadistico.md` (líneas 28-32): no modificar código, no parchar .tex, no eliminar reportes de otros, informar errores y detenerse. `SKILL-reportes.md` (líneas 30-33): tratar como descriptivos, no imputar, no eliminar outliers. Son implícitos, no formalizados como lista de "NO hacer". | Formalizar lista de guardarraíles explícitos en docs. | Crear sección `docs/agentes/guardrails.md` o agregar a arquitectura. |
 | 2.6 | .gitignore / protección de datos | 🟢 | `Agent_ElBoss_Doc/.gitignore`: ignora `site/`, `.cache/`, `.venv/`, `__pycache__/`. Scripts `sync-agents.ps1` sanitiza rutas. Verificación: sin `.env` en ningún repo, sin tokens hardcodeados (grep verificado), sin credenciales en git history. | — | Ninguna |
 | 2.7 | Seguridad (API keys, tokens, secretos) | 🟢 | Verificado con `Select-String` y `Get-ChildItem` en todos los repos + git history: **LIMPIO.** No hay `.env`, no hay `gho_`, `sk-`, `api_key`, `password`, `secret` hardcodeados. Token de GitHub: almacenado en keyring del sistema (verificado vía `gh auth status`). | — | Ninguna |
 
-### RESUMEN CRITERIO 2: 🟡 4/7 verificados, 3 con gaps menores, 1 requiere info usuario
+### RESUMEN CRITERIO 2: 🟢 5/7 verificados, 🟡 2 con gaps menores (tabla herramientas, flujo detallado, guardrails, instalación, estructura)
 
 ---
 
@@ -144,7 +144,7 @@
 
 ### ⚠️ Requiere información del usuario
 
-- **Modelo de IA utilizado:** `opencode.jsonc` está vacío. El usuario debe indicar: nombre del modelo, proveedor, por qué lo eligió, qué alternativas consideró.
+- Ninguno — todos los campos críticos están completos.
 
 ---
 
@@ -152,9 +152,8 @@
 
 | # | Tarea | Criterio | Impacto |
 |---|---|---|---|
-| 1 | Resolver ⚠️ modelo de IA | C2 | ALTO — 20% de la nota |
-| 2 | Test dataset pequeño + archivo inválido | C4 | BAJO |
-| 3 | Material visual de sustentación | C5 | BAJO |
-| 4 | Fix reportes-estadisticos push (.venv) | — | OPERACIONAL |
+| 1 | Test dataset pequeño + archivo inválido | C4 | BAJO |
+| 2 | Material visual de sustentación | C5 | BAJO |
+| 3 | Fix reportes-estadisticos push (.venv) → repo limpio nuevo | — | OPERACIONAL |
 
-**Estado general: ~85% de los requisitos cubiertos.**
+**Estado general: ~90% de los requisitos cubiertos.**
