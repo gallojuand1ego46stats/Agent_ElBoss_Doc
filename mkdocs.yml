@@ -29,9 +29,21 @@ markdown_extensions:
   - tables
 nav:
   - Inicio: index.md
+  - Justificacion:
+      - Resumen: justificacion/README.md
+      - Contraparte: justificacion/contraparte.md
+      - Problema: justificacion/problema.md
+      - Linea base: justificacion/linea_base.md
+      - Anclaje estadistico: justificacion/anclaje_estadistico.md
+      - Por que un agente: justificacion/por_que_un_agente.md
+      - Alternativas: justificacion/alternativas.md
+      - Alcance: justificacion/alcance.md
   - Arquitectura: arquitectura.md
   - Agentes:
       - El-Boss: agentes/El-Boss.md
       - reportero-estadistico: agentes/reportero-estadistico.md
       - Skill reportes-estadisticos: agentes/SKILL-reportes.md
+  - Sustentacion:
+      - Preguntas dificiles: sustentacion/preguntas_dificiles.md
+      - Guion de demostracion: sustentacion/demo_guion.md
   - Guia de actualizacion: guia-actualizacion.md

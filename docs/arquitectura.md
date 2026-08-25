@@ -45,6 +45,18 @@ flowchart LR
 | Reporte | `04_reporte.py` | LaTeX -> PDF en `latex/` |
 | Inferencia | `05_inferencia.py` | Pruebas basicas complementarias |
 
+## Manejo de errores del pipeline
+
+| Error | Deteccion | Respuesta | Mensaje al usuario |
+|---|---|---|---|
+| Archivo no encontrado | `FileNotFoundError` en carga | Pipeline se detiene | "Error al cargar: [detalle]" |
+| Formato no soportado | `ValueError` en carga | Pipeline se detiene | "Error al cargar: [detalle]" |
+| Dataset vacio (0 filas/columnas) | Verificacion en `main.py:72-74` | Pipeline se detiene | "El dataset esta vacio" |
+| Variables sin utilidad | Verificacion en `main.py:81-83` | Pipeline se detiene | "No contiene variables utiles" |
+| Fallo en visualizaciones | `Exception` en `main.py:149-153` | Continua sin figuras | "Advertencia: Error generando visualizaciones" |
+| Fallo compilacion LaTeX | Verificacion en `main.py:196-197` | Informa sin resultado PDF | "PDF: No se pudo generar (ver errores arriba)" |
+| Valores faltantes | Manejado por pandas/scipy | Calcula sobre valores validos | Advertencia en resultados |
+
 ## Reglas de convivencia entre agentes
 
 - El subagente **no modifica** el codigo del pipeline salvo orden explicita del usuario.
