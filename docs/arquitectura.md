@@ -35,6 +35,44 @@ flowchart LR
    - Resumen breve (filas, columnas, advertencias).
 6. **El-Boss** resume todo al usuario.
 
+## Mapeo detallado del flujo
+
+```mermaid
+flowchart TD
+    A["1. Usuario solicita reporte"] --> B["2. El-Boss identifica intencion"]
+    B --> C["3. El-Boss delega via Tool Task"]
+    C --> D["4. reportero-estadistico recibe petition"]
+    D --> E{"5. Valida fuente del dataset"}
+    E -->|"Existe"| F["6. Ejecuta main.py"]
+    E -->|"No existe"| G["Reporta error y se detiene"]
+    F --> H["7. Pipeline: carga + tipificacion"]
+    H --> I["8. Pipeline: exploracion (01_explorar.py)"]
+    I --> J["9. Pipeline: descriptivos (02_descriptivo.py)"]
+    J --> K["10. Pipeline: inferencia (05_inferencia.py)"]
+    K --> L["11. Pipeline: visualizaciones (03_*.py)"]
+    L --> M{"12. Visualizaciones OK?"}
+    M -->|"Si"| N["13. Pipeline: reporte LaTeX (04_reporte.py)"]
+    M -->|"Fallo"| O["Advertencia, continua sin figuras"]
+    O --> N
+    N --> P{"14. pdflatex OK?"}
+    P -->|"Si"| Q["15. Subagente verifica salidas"]
+    P -->|"Fallo"| R["Reporta error LaTeX"]
+    Q --> S["16. Subagente devuelve resultado a El-Boss"]
+    S --> T["17. El-Boss resume al usuario"]
+```
+
+### Validacion en cada fase
+
+| Fase | Que valida | Si falla |
+|---|---|---|
+| Carga | Archivo existe, formato soportado, no vacio | Detiene pipeline, informa error |
+| Tipificacion | Al menos 1 variable numerica util | Detiene pipeline, informa error |
+| Exploracion | Estructura del DataFrame | Continua con advertencia |
+| Descriptivos | Valores numericos disponibles | Calcula sobre valores validos |
+| Inferencia | n >= 2 para IC, categorias para proporciones | Genera notas de no-calificabilidad |
+| Visualizaciones | Datos suficientes para graficar | Continua sin figuras (no fatal) |
+| LaTeX | pdflatex instalado y funcionando | Informa que PDF no se pudo generar |
+
 ## Fases del pipeline
 
 | Fase | Script | Salida |
@@ -62,3 +100,17 @@ flowchart LR
 - El subagente **no modifica** el codigo del pipeline salvo orden explicita del usuario.
 - Si pdflatex falla, se reporta el error tal cual; no se parchea el `.tex`.
 - Regenerar el PDF de un dataset es seguro; nunca se tocan reportes de otros datasets.
+
+## Conexion entre este documento y el pipeline
+
+Este repositorio (`Agent_ElBoss_Doc`) documenta la arquitectura del sistema. El codigo ejecutable se encuentra en un repositorio separado:
+
+| Este repositorio (docs) | Repositorio del pipeline (codigo) |
+|---|---|
+| `docs/arquitectura.md` → describe el flujo | `scripts/main.py` → implementa el flujo |
+| `docs/agentes/*.md` → definen roles y reglas | `tests/` → verifican que el codigo cumple |
+| `docs/justificacion/` → por que existe el sistema | `datos/` → datasets de prueba |
+| `docs/pruebas/` → resultados documentados | `latex/` → PDFs generados |
+| `docs/implementacion/` → como instalar | `requirements.txt` → dependencias |
+
+**Para ejecutar el sistema:** clonar `pipeline-estadistico`, crear venv, instalar dependencias, ejecutar `python scripts/main.py <dataset>`. Ver `docs/implementacion/instalacion.md` para guia completa.

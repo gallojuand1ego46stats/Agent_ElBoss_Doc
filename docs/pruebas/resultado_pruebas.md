@@ -119,3 +119,30 @@ Se verifican resultados contra calculos manuales con scipy:
 | clientes_datos_faltantes | CSV | 250 | clientes_datos_faltantes.pdf | 309 KB |
 | Datos historicos de McDonald's | CSV | N/A | Datos_historicos_de_McDonalds.pdf | 238 KB |
 | Drug Price | XLSX | N/A | Drug_Price.pdf | 276 KB |
+
+## Cobertura de criterios del rubric
+
+### Caso 6 — Formato invalido (Criterio 4.6)
+
+El pipeline maneja formatos invalidos en la fase de carga:
+
+| Escenario | Comportamiento | Evidencia en codigo |
+|---|---|---|
+| Archivo inexistente | `FileNotFoundError` capturado, pipeline se detiene | `main.py:43-47` |
+| Formato no soportado (.txt, .json, etc.) | `ValueError` capturado, pipeline se detiene | `main.py:43-47` |
+| Archivo vacio (0 bytes) | Error en carga pandas | `main.py:43-47` |
+| Archivo corrupto (contenido invalido) | Error en carga pandas | `main.py:43-47` |
+
+**Nota:** No existe un test automatizado que envie un archivo corrupto intencionalmente. Sin embargo, el manejo de errores esta implementado y verificado manualmente: si se proporciona una ruta inexistente, el pipeline imprime `"Error al cargar: [detalle]"` y retorna sin generar PDF.
+
+### Caso 8 — Fallo controlado (Criterio 4.8)
+
+El pipeline maneja fallos de compilacion LaTeX:
+
+| Escenario | Comportamiento | Evidencia en codigo |
+|---|---|---|
+| pdflatex no instalado | `main.py` detecta fallo de subprocess, informa `"PDF: No se pudo generar"` | `main.py:196-197` |
+| Errores en .tex generado | pdflatex retorna codigo distinto de 0, se reporta el error | `main.py:192-197` |
+| Fallo en visualizaciones | Pipeline continua sin figuras, genera PDF sin graficos | `main.py:149-153` |
+
+**Evidencia de fallo controlado:** El subagente `reportero-estadistico.md` (linea 29) instruye: *"Si pdflatex falla, reporta el error tal cual; no intentes arreglos improvisados sobre el `.tex` generado."* Esto garantiza que los fallos se comunican transparentemente al usuario en vez de ocultarse.

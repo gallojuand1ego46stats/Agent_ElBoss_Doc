@@ -43,6 +43,12 @@ nav:
       - El-Boss: agentes/El-Boss.md
       - reportero-estadistico: agentes/reportero-estadistico.md
       - Skill reportes-estadisticos: agentes/SKILL-reportes.md
+      - Skills del sistema: agentes/skills.md
+      - Guardrails: agentes/guardrails.md
+  - Implementacion:
+      - Guia de instalacion: implementacion/instalacion.md
+  - Pruebas:
+      - Resultados: pruebas/resultado_pruebas.md
   - Sustentacion:
       - Preguntas dificiles: sustentacion/preguntas_dificiles.md
       - Guion de demostracion: sustentacion/demo_guion.md

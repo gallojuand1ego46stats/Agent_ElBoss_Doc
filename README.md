@@ -1,55 +1,59 @@
-# Agent_ElBoss_Doc
+# Resumen ejecutivo
 
-![Deploy Docs](https://github.com/gallojuand1ego46stats/Agent_ElBoss_Doc/actions/workflows/docs.yml/badge.svg)
+## Que es
 
-Documentacion del **sistema multiagente de analisis estadistico** construido sobre [opencode](https://opencode.ai):
+ElBoss es un **sistema multiagente de analisis estadistico** construido sobre [opencode](https://opencode.ai) que automatiza la generacion de reportes estadisticos completos en PDF a partir de datasets CSV o Excel.
 
-- **El-Boss**: agente principal (coordinador). Recibe las peticiones y delega.
-- **reportero-estadistico**: subagente especializado que ejecuta el pipeline de reportes PDF.
-- **Skill `reportes-estadisticos`**: instrucciones reutilizables para invocar el pipeline.
+## Para que sirve
 
-## Sitio web
+Convertir un dataset crudo en un **reporte estadistico profesional** con:
 
-La documentacion navegable se publica automaticamente en:
-
-> <https://gallojuand1ego46stats.github.io/Agent_ElBoss_Doc/>
+- Estadisticos descriptivos (tendencia central, dispersion, forma)
+- Analisis de frecuencias para variables categoricas
+- Intervalos de confianza (IC de media con t de Student, IC de proporcion con Wilson)
+- Deteccion de outliers (metodo IQR/Tukey)
+- Visualizaciones automaticas (boxplots, barras, histogramas)
+- Documento LaTeX compilado a PDF con tablas y figuras
 
 ## Como funciona
 
 ```text
-Usuario pide un reporte
+Usuario: "hazme un reporte de iris.csv"
         |
-        v
-   [ El-Boss ]  --delega con Tool Task-->  [ reportero-estadistico ]
-                                                 |
-                                    lee SKILL.md y ejecuta:
-                                    .venv/Scripts/python.exe scripts/main.py "<dataset>"
-                                                 |
-                                   carga -> tipificacion -> exploracion ->
-                                   descriptivos -> inferencia -> visualizaciones ->
-                                   LaTeX/PDF
+   [ El-Boss ]  ──delega──>  [ reportero-estadistico ]
+                                    |
+                              ejecuta pipeline Python
+                                    |
+                    carga → exploracion → descriptivos →
+                    inferencia → visualizaciones → LaTeX/PDF
+                                    |
+                              devuelve rutas + resumen
+        |
+   [ El-Boss ]  ──resume──>  Usuario recibe PDF + metadata
 ```
 
-## Estructura del repositorio
+## Que aporta
 
-| Ruta | Contenido |
+| Aspecto | Valor |
 |---|---|
-| `docs/index.md` | Introduccion al sistema |
-| `docs/arquitectura.md` | Diagrama y flujo de delegacion |
-| `docs/agentes/` | Copias sincronizadas de los agentes vivos |
-| `docs/guia-actualizacion.md` | Como mantener este sitio |
-| `sync-agents.ps1` | Script que copia y sanitiza los agentes desde `~/.config/opencode` |
-| `.github/workflows/docs.yml` | Publica el sitio en GitHub Pages con cada push |
+| **Tiempo manual estimado** | ~30-45 minutos por reporte |
+| **Tiempo con ElBoss** | ~2-3 minutos (ejecucion automatica) |
+| **Techniques cubiertas** | 11 (descriptivos, IC, outliers, asimetria, etc.) |
+| **Tests** | 42 pruebas con verificacion matematica contra scipy |
+| **Datasets probados** | 5 (iris, BI Estadistica Descriptiva, clientes, McDonald's, Drug Price) |
+| **Formato de salida** | PDF via LaTeX con tablas formateadas y figuras PNG |
 
-## Actualizar la documentacion
+## Repositorios
 
-Los archivos en `docs/agentes/` son **copias** de los agentes vivos. Para actualizarlos:
+| Repositorio | Contenido |
+|---|---|
+| [Agent_ElBoss_Doc](https://github.com/gallojuand1ego46stats/Agent_ElBoss_Doc) | Documentacion del sistema (este sitio) |
+| [pipeline-estadistico](https://github.com/gallojuand1ego46stats/pipeline-estadistico) | Codigo del pipeline, tests, datasets, PDFs de ejemplo |
 
-```powershell
-powershell -ExecutionPolicy Bypass -File sync-agents.ps1
-git add .
-git commit -m "docs: sincronizar agentes"
-git push
-```
+## Stack tecnico
 
-El push dispara el workflow que reconstruye y redespliega el sitio solo.
+- **Agente:** opencode (Grok como modelo base)
+- **Pipeline:** Python 3.11, pandas, scipy, matplotlib, seaborn, pydantic
+- **Reporte:** LaTeX (pdflatex via MiKTeX)
+- **Documentacion:** MkDocs Material, desplegado en GitHub Pages
+- **Tests:** pytest (42 tests, verificacion matematica con scipy)
